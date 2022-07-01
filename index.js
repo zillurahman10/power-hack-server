@@ -21,24 +21,27 @@ const run = async () => {
 
         const billingsCollection = client.db("power-hack").collection("billings")
 
-        app.get('/billings', async (req, res) => {
-            console.log('query', req.query);
-            const page = parseInt(req.query.page)
+        app.get('/billing-list', async (req, res) => {
+            const page = parseFloat(req.query.page + 1)
             const query = {}
             const result = billingsCollection.find(query)
-
-            const billings = await result.toArray()
+            let billings;
+            if (page) {
+                billings = await result.skip(page).limit(10).toArray()
+            }
+            else {
+                billings = await result.toArray()
+            }
             res.send(billings)
         })
 
-        app.post('/billings', async (req, res) => {
+        app.post('/add-billing', async (req, res) => {
             const bill = req.body
-            console.log(req.body);
-            // const result = billingsCollection.insertOne(bill)
-            // res.send(result)
+            const result = await billingsCollection.insertOne(bill)
+            res.send(result)
         })
 
-        app.delete('/billings/:id', async (req, res) => {
+        app.delete('/delete-billing/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
             const result = await billingsCollection.deleteOne(query)
@@ -50,6 +53,17 @@ const run = async () => {
             const cursor = billingsCollection.find(query)
             const count = await cursor.count()
             res.send({ count })
+        })
+
+        app.get('/billing-list/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const cursor = await billingsCollection.findOne(query)
+            res.send(cursor)
+        })
+
+        app.patch('/update-billing/:id', async (req, res) => {
+
         })
 
     }
