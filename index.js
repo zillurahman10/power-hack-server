@@ -22,16 +22,20 @@ const run = async () => {
         const billingsCollection = client.db("power-hack").collection("billings")
 
         app.get('/billings', async (req, res) => {
+            console.log('query', req.query);
+            const page = parseInt(req.query.page)
             const query = {}
             const result = billingsCollection.find(query)
+
             const billings = await result.toArray()
             res.send(billings)
         })
 
         app.post('/billings', async (req, res) => {
             const bill = req.body
-            const result = billingsCollection.insertOne(bill)
-            res.send(result)
+            console.log(req.body);
+            // const result = billingsCollection.insertOne(bill)
+            // res.send(result)
         })
 
         app.delete('/billings/:id', async (req, res) => {
@@ -39,6 +43,13 @@ const run = async () => {
             const query = { _id: ObjectId(id) }
             const result = await billingsCollection.deleteOne(query)
             res.send(result)
+        })
+
+        app.get('/billCount', async (req, res) => {
+            const query = {}
+            const cursor = billingsCollection.find(query)
+            const count = await cursor.count()
+            res.send({ count })
         })
 
     }
