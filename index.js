@@ -35,11 +35,11 @@ const run = async () => {
             res.send(billings)
         })
 
-        app.post('/add-billing', async (req, res) => {
-            const bill = req.body
-            const result = await billingsCollection.insertOne(bill)
-            res.send(result)
-        })
+        // app.post('/add-billing', async (req, res) => {
+        //     const bill = req.body
+        //     const result = await billingsCollection.insertOne(bill)
+        //     res.send(result)
+        // })
 
         app.delete('/delete-billing/:id', async (req, res) => {
             const id = req.params.id
