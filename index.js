@@ -62,9 +62,7 @@ const run = async () => {
             res.send(cursor)
         })
 
-        app.patch('/update-billing/:id', async (req, res) => {
 
-        })
 
     }
     finally {
